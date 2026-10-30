@@ -10,26 +10,68 @@
 </head>
 <body>
 
-    <header>
-        <h1>GARAGE</h1>
-        <p>Автосервис нового поколения</p>
+    <header class="site-header">
+        <div class="container header-inner">
+            <div class="brand" aria-label="GARAGE">
+                <span class="brand-mark">G</span>
+                <div class="brand-text">
+                    <span class="brand-name">GARAGE</span>
+                    <span class="brand-subtitle">Автосервис нового поколения</span>
+                </div>
+            </div>
+
+            <nav class="main-nav" aria-label="Главное меню">
+                <a class="nav-link" href="#services">Услуги</a>
+                <a class="nav-link" href="#services">Диагностика</a>
+                <a class="nav-link" href="#bookingButton">Запись</a>
+            </nav>
+
+            <button class="header-cta" type="button" id="headerBookingButton">
+                Записаться
+            </button>
+        </div>
     </header>
 
     <main>
-        <section class="hero">
-            <h2>Твой автомобиль.<br>Наша забота.</h2>
+        <section class="hero" aria-label="Главный экран автосервиса">
+            <div class="container hero-grid">
+                <div class="hero-copy">
+                    <p class="eyebrow">Премиальный сервис для вашего автомобиля</p>
+                    <h2>Твой автомобиль.<br>Наша забота.</h2>
 
-            <p>
-                Профессиональное обслуживание,
-                диагностика и ремонт автомобилей.
-            </p>
+                    <p class="lead">
+                        Профессиональное обслуживание, диагностика и ремонт
+                        автомобилей — с современным подходом, вниманием к деталям
+                        и честным сервисом.
+                    </p>
 
-            <button id="bookingButton">
-                Записаться на обслуживание
-            </button>
+                    <div class="hero-actions">
+                        <button class="hero-button" id="bookingButton" type="button">
+                            Записаться на обслуживание
+                        </button>
+                        <a class="secondary-button" href="#services">
+                            Наши услуги
+                        </a>
+                    </div>
+                </div>
+
+                <div class="hero-visual" aria-hidden="true">
+                    <div class="hero-card">
+                        <span class="status-pill">Premium care</span>
+                        <img
+                            src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=80"
+                            alt="Автомобиль на сервисе"
+                        >
+                        <div class="visual-caption">
+                            <span>Сервис для вашего авто</span>
+                            <strong>Технологии, качество и внимание к деталям.</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
 
-        <section class="services">
+        <section class="services" id="services">
             <h2>Наши услуги</h2>
 
             <div class="service">
