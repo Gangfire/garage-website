@@ -22,8 +22,9 @@
 
             <nav class="main-nav" aria-label="Главное меню">
                 <a class="nav-link" href="#services">Услуги</a>
-                <a class="nav-link" href="#services">Диагностика</a>
+                <a class="nav-link" href="#gallery">Наш сервис</a>
                 <a class="nav-link" href="#booking">Запись</a>
+                <a class="nav-link" href="#contacts">Контакты</a>
             </nav>
 
             <button class="header-cta" type="button" id="headerBookingButton">
@@ -93,6 +94,41 @@
             </div>
         </section>
 
+        <section class="gallery-section" id="gallery" aria-labelledby="galleryTitle">
+            <div class="gallery-heading">
+                <p class="eyebrow">Пространство GARAGE</p>
+                <h2 id="galleryTitle">Наш сервис</h2>
+                <p>Рабочие зоны, оборудование и внимание к каждому автомобилю.</p>
+            </div>
+
+            <div class="gallery-grid" id="serviceGallery">
+                <button class="gallery-item gallery-item-large" type="button" data-full-src="https://images.unsplash.com/photo-1487754180451-c456f719a1fc?auto=format&fit=crop&w=1800&q=85" data-image-alt="Автомобиль в рабочей зоне автосервиса" data-caption="Рабочая зона автосервиса" aria-label="Открыть фотографию: рабочая зона автосервиса">
+                    <img src="https://images.unsplash.com/photo-1487754180451-c456f719a1fc?auto=format&fit=crop&w=1000&q=80" alt="Автомобиль в рабочей зоне автосервиса" loading="lazy">
+                    <span class="gallery-caption">Рабочая зона</span>
+                </button>
+                <button class="gallery-item gallery-item-wide" type="button" data-full-src="https://images.unsplash.com/photo-1771340742493-52fbd5476ccb?auto=format&fit=crop&w=1800&q=85" data-image-alt="Механик заливает моторное масло в двигатель автомобиля" data-caption="Замена масла" aria-label="Открыть фотографию: замена масла">
+                    <img src="https://images.unsplash.com/photo-1771340742493-52fbd5476ccb?auto=format&fit=crop&w=1000&q=80" alt="Механик заливает моторное масло в двигатель автомобиля" loading="lazy">
+                    <span class="gallery-caption">Замена масла</span>
+                </button>
+                <button class="gallery-item gallery-item-wide" type="button" data-full-src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=1800&q=85" data-image-alt="Крупный план ремней и узлов автомобильного двигателя" data-caption="Детали двигателя" aria-label="Открыть фотографию: детали двигателя">
+                    <img src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=1000&q=80" alt="Крупный план ремней и узлов автомобильного двигателя" loading="lazy">
+                    <span class="gallery-caption">Детали двигателя</span>
+                </button>
+                <button class="gallery-item" type="button" data-full-src="https://images.unsplash.com/photo-1625047509168-a7026f36de04?auto=format&fit=crop&w=1800&q=85" data-image-alt="Механик осматривает автомобиль с открытым капотом в мастерской" data-caption="Осмотр автомобиля" aria-label="Открыть фотографию: осмотр автомобиля">
+                    <img src="https://images.unsplash.com/photo-1625047509168-a7026f36de04?auto=format&fit=crop&w=1000&q=80" alt="Механик осматривает автомобиль с открытым капотом в мастерской" loading="lazy">
+                    <span class="gallery-caption">Осмотр автомобиля</span>
+                </button>
+                <button class="gallery-item" type="button" data-full-src="https://images.unsplash.com/photo-1613214149922-f1809c99b414?auto=format&fit=crop&w=1800&q=85" data-image-alt="Мастер работает с колесом автомобиля в сервисе" data-caption="Работа с колесами" aria-label="Открыть фотографию: работа с колесами">
+                    <img src="https://images.unsplash.com/photo-1613214149922-f1809c99b414?auto=format&fit=crop&w=1000&q=80" alt="Мастер работает с колесом автомобиля в сервисе" loading="lazy">
+                    <span class="gallery-caption">Работа с колесами</span>
+                </button>
+                <button class="gallery-item" type="button" data-full-src="https://images.unsplash.com/photo-1786489283327-2fbcb441a82e?auto=format&fit=crop&w=1800&q=85" data-image-alt="Спортивный автомобиль внутри ремонтного цеха" data-caption="Автомобиль в сервисе" aria-label="Открыть фотографию: автомобиль в ремонтном цехе">
+                    <img src="https://images.unsplash.com/photo-1786489283327-2fbcb441a82e?auto=format&fit=crop&w=1000&q=80" alt="Спортивный автомобиль внутри ремонтного цеха" loading="lazy">
+                    <span class="gallery-caption">Автомобиль в сервисе</span>
+                </button>
+            </div>
+        </section>
+
         <section class="booking-section" id="booking" aria-labelledby="bookingTitle">
             <div class="booking-intro">
                 <p class="eyebrow">Обслуживание начинается с заявки</p>
@@ -140,12 +176,46 @@
                 <p class="form-message" id="formMessage" role="status" aria-live="polite"></p>
             </form>
         </section>
+
+        <section class="contacts-section" id="contacts" aria-labelledby="contactsTitle">
+            <p class="eyebrow">Мы на связи</p>
+            <h2 id="contactsTitle">Контакты</h2>
+
+            <div class="contacts-grid">
+                <div class="contact-item">
+                    <h3>Телефон</h3>
+                    <a href="tel:+79121231231">8 (912) 123-12-31</a>
+                </div>
+
+                <div class="contact-item">
+                    <h3>Адрес</h3>
+                    <p>Адрес автосервиса уточняется</p>
+                </div>
+
+                <div class="contact-item">
+                    <h3>График работы</h3>
+                    <p>Пн–Пт, 9:00–21:00</p>
+                </div>
+            </div>
+        </section>
     </main>
+
+    <dialog class="gallery-lightbox" id="galleryLightbox" aria-label="Просмотр фотографии">
+        <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Закрыть фотографию">&times;</button>
+        <img class="lightbox-image" id="lightboxImage" alt="">
+        <p class="lightbox-caption" id="lightboxCaption"></p>
+    </dialog>
 
     <footer>
         <p>GARAGE © 2026</p>
         <p>Работаем для вашего комфорта</p>
     </footer>
+
+    <button class="back-to-top" id="backToTop" type="button" aria-label="Наверх" title="Наверх" hidden>
+        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+            <path d="M12 19V5M5 12l7-7 7 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" />
+        </svg>
+    </button>
 
     <script src="script.js"></script>
 

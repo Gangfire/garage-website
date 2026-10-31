@@ -69,3 +69,78 @@ if (bookingForm && formMessage) {
         isProcessing = false;
     });
 }
+
+const serviceGallery = document.getElementById("serviceGallery");
+const galleryLightbox = document.getElementById("galleryLightbox");
+const lightboxImage = document.getElementById("lightboxImage");
+const lightboxCaption = document.getElementById("lightboxCaption");
+const lightboxClose = document.getElementById("lightboxClose");
+
+if (serviceGallery && galleryLightbox && lightboxImage && lightboxCaption && lightboxClose) {
+    serviceGallery.addEventListener("click", function (event) {
+        const galleryItem = event.target.closest(".gallery-item");
+
+        if (!galleryItem) {
+            return;
+        }
+
+        lightboxImage.src = galleryItem.dataset.fullSrc;
+        lightboxImage.alt = galleryItem.dataset.imageAlt;
+        lightboxCaption.textContent = galleryItem.dataset.caption;
+        galleryLightbox.showModal();
+    });
+
+    lightboxClose.addEventListener("click", function () {
+        galleryLightbox.close();
+    });
+
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape" && galleryLightbox.open) {
+            galleryLightbox.close();
+        }
+    });
+
+    galleryLightbox.addEventListener("click", function (event) {
+        if (event.target === galleryLightbox) {
+            galleryLightbox.close();
+        }
+    });
+
+    galleryLightbox.addEventListener("close", function () {
+        lightboxImage.removeAttribute("src");
+        lightboxImage.alt = "";
+        lightboxCaption.textContent = "";
+    });
+}
+
+const backToTopButton = document.getElementById("backToTop");
+const protectedScrollElements = document.querySelectorAll("#booking .booking-form, #contacts .contact-item");
+
+if (backToTopButton) {
+    function updateBackToTopVisibility() {
+        const buttonStyles = window.getComputedStyle(backToTopButton);
+        const buttonWidth = parseFloat(buttonStyles.width);
+        const buttonHeight = parseFloat(buttonStyles.height);
+        const buttonRight = window.innerWidth - parseFloat(buttonStyles.right);
+        const buttonBottom = window.innerHeight - parseFloat(buttonStyles.bottom);
+        const buttonLeft = buttonRight - buttonWidth;
+        const buttonTop = buttonBottom - buttonHeight;
+        const overlapsProtectedElement = [...protectedScrollElements].some(element => {
+            const rect = element.getBoundingClientRect();
+
+            return rect.right > buttonLeft && rect.left < buttonRight &&
+                rect.bottom > buttonTop && rect.top < buttonBottom;
+        });
+
+        backToTopButton.hidden = window.scrollY < 280 || overlapsProtectedElement;
+    }
+
+    window.addEventListener("scroll", updateBackToTopVisibility, { passive: true });
+    window.addEventListener("resize", updateBackToTopVisibility);
+    updateBackToTopVisibility();
+
+    backToTopButton.addEventListener("click", function () {
+        const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+        window.scrollTo({ top: 0, behavior });
+    });
+}
