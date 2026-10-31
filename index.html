@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Автосервис | Первый проект</title>
+    <title></title>
 
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="page-loader" id="pageLoader" role="status" aria-label="Загрузка GARAGE">
+    <div class="page-loader" id="pageLoader" role="status" aria-label="Загрузка">
         <div class="page-loader-content" aria-hidden="true">
-            <span class="page-loader-logo">GARAGE</span>
+            <span class="page-loader-logo" id="loaderLogo"></span>
             <span class="page-loader-track">
                 <span class="page-loader-bar"></span>
             </span>
@@ -21,11 +21,11 @@
 
     <header class="site-header">
         <div class="container header-inner">
-            <div class="brand" aria-label="GARAGE">
-                <span class="brand-mark">G</span>
-                <div class="brand-text">
-                    <span class="brand-name">GARAGE</span>
-                    <span class="brand-subtitle">Автосервис нового поколения</span>
+            <div class="brand" draggable="false">
+                <span class="brand-mark" draggable="false"></span>
+                <div class="brand-text" draggable="false">
+                    <span class="brand-name" id="businessName" draggable="false"></span>
+                    <span class="brand-subtitle" id="businessTagline" draggable="false"></span>
                 </div>
             </div>
 
@@ -46,35 +46,29 @@
         <section class="hero" aria-label="Главный экран автосервиса">
             <div class="container hero-grid">
                 <div class="hero-copy">
-                    <p class="eyebrow">Премиальный сервис для вашего автомобиля</p>
-                    <h2>Твой автомобиль.<br>Наша забота.</h2>
+                    <p class="eyebrow" id="heroEyebrow"></p>
+                    <h2 id="heroTitle"></h2>
 
-                    <p class="lead">
-                        Профессиональное обслуживание, диагностика и ремонт
-                        автомобилей — с современным подходом, вниманием к деталям
-                        и честным сервисом.
-                    </p>
+                    <p class="lead" id="heroDescription"></p>
 
                     <div class="hero-actions">
                         <button class="hero-button" id="bookingButton" type="button">
-                            Записаться на обслуживание
                         </button>
-                        <a class="secondary-button" href="#services">
-                            Наши услуги
-                        </a>
+                        <a class="secondary-button" id="servicesButtonLabel" href="#services"></a>
                     </div>
                 </div>
 
                 <div class="hero-visual" aria-hidden="true">
                     <div class="hero-card">
-                        <span class="status-pill">Premium care</span>
+                        <span class="status-pill" id="heroStatus"></span>
                         <img
                             src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=80"
                             alt="Автомобиль на сервисе"
+                            draggable="false"
                         >
                         <div class="visual-caption">
-                            <span>Сервис для вашего авто</span>
-                            <strong>Технологии, качество и внимание к деталям.</strong>
+                            <span id="heroCaptionLabel"></span>
+                            <strong id="heroCaptionText"></strong>
                         </div>
                     </div>
                 </div>
@@ -82,57 +76,39 @@
         </section>
 
         <section class="services" id="services">
-            <h2>Наши услуги</h2>
-
-            <div class="service">
-                <h3>Диагностика</h3>
-                <p>Проверка состояния автомобиля</p>
-                <span>от 1 500 ₽</span>
-            </div>
-
-            <div class="service">
-                <h3>Замена масла</h3>
-                <p>Обслуживание двигателя</p>
-                <span>от 2 000 ₽</span>
-            </div>
-
-            <div class="service">
-                <h3>Ремонт</h3>
-                <p>Профессиональный ремонт</p>
-                <span>от 3 000 ₽</span>
-            </div>
+            <h2 id="servicesTitle"></h2>
         </section>
 
         <section class="gallery-section" id="gallery" aria-labelledby="galleryTitle">
             <div class="gallery-heading">
-                <p class="eyebrow">Пространство GARAGE</p>
+                <p class="eyebrow" id="galleryEyebrow"></p>
                 <h2 id="galleryTitle">Наш сервис</h2>
                 <p>Рабочие зоны, оборудование и внимание к каждому автомобилю.</p>
             </div>
 
             <div class="gallery-grid" id="serviceGallery">
                 <button class="gallery-item gallery-item-large" type="button" data-full-src="https://images.unsplash.com/photo-1487754180451-c456f719a1fc?auto=format&fit=crop&w=1800&q=85" data-image-alt="Автомобиль в рабочей зоне автосервиса" data-caption="Рабочая зона автосервиса" aria-label="Открыть фотографию: рабочая зона автосервиса">
-                    <img src="https://images.unsplash.com/photo-1487754180451-c456f719a1fc?auto=format&fit=crop&w=1000&q=80" alt="Автомобиль в рабочей зоне автосервиса" loading="lazy">
+                    <img src="https://images.unsplash.com/photo-1487754180451-c456f719a1fc?auto=format&fit=crop&w=1000&q=80" alt="Автомобиль в рабочей зоне автосервиса" loading="lazy" draggable="false">
                     <span class="gallery-caption">Рабочая зона</span>
                 </button>
                 <button class="gallery-item gallery-item-wide" type="button" data-full-src="https://images.unsplash.com/photo-1771340742493-52fbd5476ccb?auto=format&fit=crop&w=1800&q=85" data-image-alt="Механик заливает моторное масло в двигатель автомобиля" data-caption="Замена масла" aria-label="Открыть фотографию: замена масла">
-                    <img src="https://images.unsplash.com/photo-1771340742493-52fbd5476ccb?auto=format&fit=crop&w=1000&q=80" alt="Механик заливает моторное масло в двигатель автомобиля" loading="lazy">
+                    <img src="https://images.unsplash.com/photo-1771340742493-52fbd5476ccb?auto=format&fit=crop&w=1000&q=80" alt="Механик заливает моторное масло в двигатель автомобиля" loading="lazy" draggable="false">
                     <span class="gallery-caption">Замена масла</span>
                 </button>
                 <button class="gallery-item gallery-item-wide" type="button" data-full-src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=1800&q=85" data-image-alt="Крупный план ремней и узлов автомобильного двигателя" data-caption="Детали двигателя" aria-label="Открыть фотографию: детали двигателя">
-                    <img src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=1000&q=80" alt="Крупный план ремней и узлов автомобильного двигателя" loading="lazy">
+                    <img src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=1000&q=80" alt="Крупный план ремней и узлов автомобильного двигателя" loading="lazy" draggable="false">
                     <span class="gallery-caption">Детали двигателя</span>
                 </button>
                 <button class="gallery-item" type="button" data-full-src="https://images.unsplash.com/photo-1625047509168-a7026f36de04?auto=format&fit=crop&w=1800&q=85" data-image-alt="Механик осматривает автомобиль с открытым капотом в мастерской" data-caption="Осмотр автомобиля" aria-label="Открыть фотографию: осмотр автомобиля">
-                    <img src="https://images.unsplash.com/photo-1625047509168-a7026f36de04?auto=format&fit=crop&w=1000&q=80" alt="Механик осматривает автомобиль с открытым капотом в мастерской" loading="lazy">
+                    <img src="https://images.unsplash.com/photo-1625047509168-a7026f36de04?auto=format&fit=crop&w=1000&q=80" alt="Механик осматривает автомобиль с открытым капотом в мастерской" loading="lazy" draggable="false">
                     <span class="gallery-caption">Осмотр автомобиля</span>
                 </button>
                 <button class="gallery-item" type="button" data-full-src="https://images.unsplash.com/photo-1613214149922-f1809c99b414?auto=format&fit=crop&w=1800&q=85" data-image-alt="Мастер работает с колесом автомобиля в сервисе" data-caption="Работа с колесами" aria-label="Открыть фотографию: работа с колесами">
-                    <img src="https://images.unsplash.com/photo-1613214149922-f1809c99b414?auto=format&fit=crop&w=1000&q=80" alt="Мастер работает с колесом автомобиля в сервисе" loading="lazy">
+                    <img src="https://images.unsplash.com/photo-1613214149922-f1809c99b414?auto=format&fit=crop&w=1000&q=80" alt="Мастер работает с колесом автомобиля в сервисе" loading="lazy" draggable="false">
                     <span class="gallery-caption">Работа с колесами</span>
                 </button>
                 <button class="gallery-item" type="button" data-full-src="https://images.unsplash.com/photo-1786489283327-2fbcb441a82e?auto=format&fit=crop&w=1800&q=85" data-image-alt="Спортивный автомобиль внутри ремонтного цеха" data-caption="Автомобиль в сервисе" aria-label="Открыть фотографию: автомобиль в ремонтном цехе">
-                    <img src="https://images.unsplash.com/photo-1786489283327-2fbcb441a82e?auto=format&fit=crop&w=1000&q=80" alt="Спортивный автомобиль внутри ремонтного цеха" loading="lazy">
+                    <img src="https://images.unsplash.com/photo-1786489283327-2fbcb441a82e?auto=format&fit=crop&w=1000&q=80" alt="Спортивный автомобиль внутри ремонтного цеха" loading="lazy" draggable="false">
                     <span class="gallery-caption">Автомобиль в сервисе</span>
                 </button>
             </div>
@@ -165,10 +141,7 @@
                     <div class="form-field">
                         <label for="serviceType">Услуга</label>
                         <select id="serviceType" name="service" required>
-                            <option value="" selected disabled>Выберите услугу</option>
-                            <option value="Диагностика">Диагностика</option>
-                            <option value="Замена масла">Замена масла</option>
-                            <option value="Ремонт">Ремонт</option>
+                            <option value="" selected disabled></option>
                         </select>
                     </div>
 
@@ -193,17 +166,17 @@
             <div class="contacts-grid">
                 <div class="contact-item">
                     <h3>Телефон</h3>
-                    <a href="tel:+79121231231">8 (912) 123-12-31</a>
+                    <a id="contactPhone" href="tel:"></a>
                 </div>
 
                 <div class="contact-item">
                     <h3>Адрес</h3>
-                    <p>Адрес автосервиса уточняется</p>
+                    <p id="contactAddress"></p>
                 </div>
 
                 <div class="contact-item">
                     <h3>График работы</h3>
-                    <p>Пн–Пт, 9:00–21:00</p>
+                    <p id="contactHours"></p>
                 </div>
             </div>
         </section>
@@ -216,7 +189,7 @@
     </dialog>
 
     <footer>
-        <p>GARAGE © 2026</p>
+        <p><span id="footerBrandName"></span> © 2026</p>
         <p>Работаем для вашего комфорта</p>
     </footer>
 
@@ -226,6 +199,7 @@
         </svg>
     </button>
 
+    <script src="site-config.js"></script>
     <script src="script.js"></script>
 
 </body>

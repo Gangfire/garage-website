@@ -138,6 +138,15 @@ a {
     display: flex;
     align-items: center;
     gap: 12px;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+}
+
+.brand * {
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
 }
 
 .brand-mark {
@@ -361,6 +370,9 @@ a {
     height: 520px;
     object-fit: cover;
     border-radius: 22px;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
     transition: transform 0.35s ease, filter 0.35s ease;
 }
 
@@ -492,6 +504,9 @@ a {
     height: 100%;
     min-height: inherit;
     object-fit: cover;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
     transition: transform 0.45s ease, filter 0.35s ease;
 }
 

@@ -27,6 +27,103 @@ if (pageLoader) {
     }
 }
 
+const siteConfig = window.GARAGE_CONFIG;
+
+function setConfiguredText(id, value) {
+    const element = document.getElementById(id);
+
+    if (element && typeof value === "string") {
+        element.textContent = value;
+    }
+}
+
+if (siteConfig) {
+    const business = siteConfig.business;
+    const hero = siteConfig.hero;
+
+    document.title = business.pageTitle;
+    document.querySelector(".brand")?.setAttribute("aria-label", business.name);
+    document.querySelector(".page-loader")?.setAttribute("aria-label", `Загрузка ${business.name}`);
+    setConfiguredText("businessName", business.name);
+    setConfiguredText("businessTagline", business.tagline);
+    setConfiguredText("loaderLogo", business.name);
+    setConfiguredText("footerBrandName", business.name);
+
+    const brandMark = document.querySelector(".brand-mark");
+    if (brandMark && business.name) {
+        brandMark.textContent = business.name.charAt(0).toUpperCase();
+    }
+
+    const heroSection = document.querySelector(".hero");
+    heroSection?.setAttribute("aria-label", `Главный экран ${business.name}`);
+    setConfiguredText("galleryEyebrow", `Пространство ${business.name}`);
+    setConfiguredText("heroEyebrow", hero.eyebrow);
+    setConfiguredText("heroDescription", hero.description);
+    setConfiguredText("bookingButton", hero.primaryButton);
+    setConfiguredText("servicesButtonLabel", hero.secondaryButton);
+    setConfiguredText("heroStatus", hero.status);
+    setConfiguredText("heroCaptionLabel", hero.captionLabel);
+    setConfiguredText("heroCaptionText", hero.caption);
+
+    const heroTitle = document.getElementById("heroTitle");
+    if (heroTitle && Array.isArray(hero.titleLines)) {
+        heroTitle.replaceChildren();
+        hero.titleLines.forEach((line, index) => {
+            if (index > 0) {
+                heroTitle.append(document.createElement("br"));
+            }
+
+            heroTitle.append(document.createTextNode(line));
+        });
+    }
+
+    setConfiguredText("servicesTitle", siteConfig.servicesTitle);
+    const servicesSection = document.getElementById("services");
+    const visibleServices = siteConfig.services.filter(service => service.visible !== false);
+
+    if (servicesSection) {
+        servicesSection.querySelectorAll(".service").forEach(card => card.remove());
+
+        visibleServices.forEach(service => {
+            const card = document.createElement("div");
+            const name = document.createElement("h3");
+            const description = document.createElement("p");
+            const price = document.createElement("span");
+
+            card.className = "service";
+            card.dataset.serviceId = service.id;
+            name.textContent = service.name;
+            description.textContent = service.description;
+            price.textContent = service.price;
+            card.append(name, description, price);
+            servicesSection.append(card);
+        });
+    }
+
+    const serviceSelect = document.getElementById("serviceType");
+    const placeholderOption = serviceSelect?.options[0];
+    if (serviceSelect && placeholderOption) {
+        placeholderOption.textContent = siteConfig.servicePlaceholder;
+        serviceSelect.replaceChildren(placeholderOption);
+
+        visibleServices.forEach(service => {
+            const option = document.createElement("option");
+            option.value = service.name;
+            option.textContent = service.name;
+            serviceSelect.append(option);
+        });
+    }
+
+    const contactPhone = document.getElementById("contactPhone");
+    if (contactPhone) {
+        contactPhone.href = business.phone.href;
+        contactPhone.textContent = business.phone.text;
+    }
+
+    setConfiguredText("contactAddress", business.address);
+    setConfiguredText("contactHours", business.hours);
+}
+
 const bookingButton = document.getElementById("bookingButton");
 const headerBookingButton = document.getElementById("headerBookingButton");
 const bookingForm = document.getElementById("bookingForm");
@@ -104,6 +201,12 @@ const galleryLightbox = document.getElementById("galleryLightbox");
 const lightboxImage = document.getElementById("lightboxImage");
 const lightboxCaption = document.getElementById("lightboxCaption");
 const lightboxClose = document.getElementById("lightboxClose");
+
+document.addEventListener("contextmenu", function (event) {
+    if (event.target instanceof Element && event.target.closest(".hero-card img, .gallery-item img")) {
+        event.preventDefault();
+    }
+});
 
 if (serviceGallery && galleryLightbox && lightboxImage && lightboxCaption && lightboxClose) {
     serviceGallery.addEventListener("click", function (event) {
