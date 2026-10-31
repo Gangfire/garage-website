@@ -1,3 +1,32 @@
+const pageLoader = document.getElementById("pageLoader");
+
+if (pageLoader) {
+    let loaderHidden = false;
+    let loaderFallbackTimer;
+
+    function hidePageLoader() {
+        if (loaderHidden) {
+            return;
+        }
+
+        loaderHidden = true;
+        window.clearTimeout(loaderFallbackTimer);
+        pageLoader.classList.add("is-hidden");
+        pageLoader.setAttribute("aria-hidden", "true");
+        window.setTimeout(function () {
+            pageLoader.hidden = true;
+        }, 220);
+    }
+
+    loaderFallbackTimer = window.setTimeout(hidePageLoader, 6000);
+
+    if (document.readyState === "complete") {
+        hidePageLoader();
+    } else {
+        window.addEventListener("load", hidePageLoader, { once: true });
+    }
+}
+
 const bookingButton = document.getElementById("bookingButton");
 const headerBookingButton = document.getElementById("headerBookingButton");
 const bookingForm = document.getElementById("bookingForm");
@@ -143,4 +172,49 @@ if (backToTopButton) {
         const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
         window.scrollTo({ top: 0, behavior });
     });
+}
+
+const siteHeader = document.querySelector(".site-header");
+const mobileHeaderQuery = window.matchMedia("(max-width: 600px)");
+let previousHeaderScrollY = window.scrollY;
+let headerScrollDirection = 0;
+let headerDirectionDistance = 0;
+
+if (siteHeader) {
+    function updateHeaderOnScroll() {
+        const currentScrollY = window.scrollY;
+
+        if (!mobileHeaderQuery.matches || currentScrollY < 48) {
+            siteHeader.classList.remove("is-compact");
+            headerScrollDirection = 0;
+            headerDirectionDistance = 0;
+            previousHeaderScrollY = currentScrollY;
+            return;
+        }
+
+        const scrollDelta = currentScrollY - previousHeaderScrollY;
+        const currentDirection = Math.sign(scrollDelta);
+
+        if (currentDirection !== 0) {
+            if (currentDirection === headerScrollDirection) {
+                headerDirectionDistance += Math.abs(scrollDelta);
+            } else {
+                headerScrollDirection = currentDirection;
+                headerDirectionDistance = Math.abs(scrollDelta);
+            }
+
+            const directionThreshold = currentDirection > 0 ? 32 : 24;
+
+            if (headerDirectionDistance >= directionThreshold) {
+                siteHeader.classList.toggle("is-compact", currentDirection > 0);
+                headerDirectionDistance = 0;
+            }
+        }
+
+        previousHeaderScrollY = currentScrollY;
+    }
+
+    window.addEventListener("scroll", updateHeaderOnScroll, { passive: true });
+    window.addEventListener("resize", updateHeaderOnScroll);
+    updateHeaderOnScroll();
 }
