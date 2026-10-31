@@ -23,7 +23,7 @@
             <nav class="main-nav" aria-label="Главное меню">
                 <a class="nav-link" href="#services">Услуги</a>
                 <a class="nav-link" href="#services">Диагностика</a>
-                <a class="nav-link" href="#bookingButton">Запись</a>
+                <a class="nav-link" href="#booking">Запись</a>
             </nav>
 
             <button class="header-cta" type="button" id="headerBookingButton">
@@ -91,6 +91,54 @@
                 <p>Профессиональный ремонт</p>
                 <span>от 3 000 ₽</span>
             </div>
+        </section>
+
+        <section class="booking-section" id="booking" aria-labelledby="bookingTitle">
+            <div class="booking-intro">
+                <p class="eyebrow">Обслуживание начинается с заявки</p>
+                <h2 id="bookingTitle">Запись на обслуживание</h2>
+                <p>Укажите данные автомобиля и выберите нужную услугу.</p>
+            </div>
+
+            <form class="booking-form" id="bookingForm">
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label for="customerName">Имя</label>
+                        <input id="customerName" name="name" type="text" autocomplete="name" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="customerPhone">Телефон</label>
+                        <input id="customerPhone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="vehicle">Марка и модель автомобиля</label>
+                        <input id="vehicle" name="vehicle" type="text" placeholder="Например, марка и модель" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="serviceType">Услуга</label>
+                        <select id="serviceType" name="service" required>
+                            <option value="" selected disabled>Выберите услугу</option>
+                            <option value="Диагностика">Диагностика</option>
+                            <option value="Замена масла">Замена масла</option>
+                            <option value="Ремонт">Ремонт</option>
+                        </select>
+                    </div>
+
+                    <div class="form-field form-field-wide">
+                        <label for="comment">Комментарий <span>(необязательно)</span></label>
+                        <textarea id="comment" name="comment" rows="4" placeholder="Опишите задачу или задайте вопрос"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-submit-row">
+                    <button class="hero-button" type="submit">Проверить заявку</button>
+                    <p class="form-note">Форма пока работает только в браузере: данные не отправляются и не сохраняются.</p>
+                </div>
+                <p class="form-message" id="formMessage" role="status" aria-live="polite"></p>
+            </form>
         </section>
     </main>
 
