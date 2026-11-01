@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <script>
+        const pageNavigationEntry = performance.getEntriesByType("navigation")[0];
+        if ("scrollRestoration" in history) {
+            history.scrollRestoration = location.hash || pageNavigationEntry?.type === "back_forward" ? "auto" : "manual";
+        }
+    </script>
+
     <title></title>
 
     <link rel="stylesheet" href="style.css">
@@ -19,15 +26,17 @@
         </div>
     </div>
 
+    <span class="page-top-anchor" id="top" aria-hidden="true"></span>
+
     <header class="site-header">
         <div class="container header-inner">
-            <div class="brand" draggable="false">
+            <a class="brand" href="#top" aria-label="Автомеханика — на главную" draggable="false">
                 <span class="brand-mark" draggable="false"></span>
                 <div class="brand-text" draggable="false">
                     <span class="brand-name" id="businessName" draggable="false"></span>
                     <span class="brand-subtitle" id="businessTagline" draggable="false"></span>
                 </div>
-            </div>
+            </a>
 
             <nav class="main-nav" aria-label="Главное меню">
                 <a class="nav-link" href="#services">Услуги</a>
@@ -166,7 +175,7 @@
             <div class="contacts-grid">
                 <div class="contact-item">
                     <h3>Телефон</h3>
-                    <a id="contactPhone" href="tel:"></a>
+                    <div id="contactPhones"></div>
                 </div>
 
                 <div class="contact-item">

@@ -42,7 +42,7 @@ if (siteConfig) {
     const hero = siteConfig.hero;
 
     document.title = business.pageTitle;
-    document.querySelector(".brand")?.setAttribute("aria-label", business.name);
+    document.querySelector(".brand")?.setAttribute("aria-label", `${business.name} — на главную`);
     document.querySelector(".page-loader")?.setAttribute("aria-label", `Загрузка ${business.name}`);
     setConfiguredText("businessName", business.name);
     setConfiguredText("businessTagline", business.tagline);
@@ -114,14 +114,29 @@ if (siteConfig) {
         });
     }
 
-    const contactPhone = document.getElementById("contactPhone");
-    if (contactPhone) {
-        contactPhone.href = business.phone.href;
-        contactPhone.textContent = business.phone.text;
+    const contactPhones = document.getElementById("contactPhones");
+    if (contactPhones && Array.isArray(business.phones)) {
+        contactPhones.replaceChildren();
+        business.phones.forEach((phone, index) => {
+            const link = document.createElement("a");
+            link.href = phone.href;
+            link.textContent = phone.text;
+            contactPhones.append(link);
+
+            if (index < business.phones.length - 1) {
+                contactPhones.append(document.createElement("br"));
+            }
+        });
     }
 
     setConfiguredText("contactAddress", business.address);
     setConfiguredText("contactHours", business.hours);
+}
+
+if (window.location.hash) {
+    const initialHash = window.location.hash.slice(1);
+    const initialHashTarget = document.getElementById(decodeURIComponent(initialHash));
+    initialHashTarget?.scrollIntoView({ behavior: "auto" });
 }
 
 const bookingButton = document.getElementById("bookingButton");
