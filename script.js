@@ -131,6 +131,16 @@ if (siteConfig) {
 
     setConfiguredText("contactAddress", business.address);
     setConfiguredText("contactHours", business.hours);
+
+    const encodedAddress = encodeURIComponent(business.address);
+    const googleMapsRoute = document.getElementById("googleMapsRoute");
+    const yandexMapsRoute = document.getElementById("yandexMapsRoute");
+    if (googleMapsRoute) {
+        googleMapsRoute.href = `https://www.google.com/maps/dir/?api=1&destination=${encodedAddress}`;
+    }
+    if (yandexMapsRoute) {
+        yandexMapsRoute.href = `https://yandex.ru/maps/?text=${encodedAddress}&rtext=~${encodedAddress}&rtt=auto`;
+    }
 }
 
 if (window.location.hash) {
@@ -150,6 +160,76 @@ const vehicle = document.getElementById("vehicle");
 
 let isProcessing = false;
 let hasPassedLocalCheck = false;
+let formChangedDuringRequest = false;
+const bookingCooldownStorageKey = "avtomehanika.bookingCooldownUntil";
+const bookingCooldownDuration = 10 * 60 * 1000;
+let bookingCooldownUntil = 0;
+let cooldownWasConfirmedInThisSession = false;
+let bookingCooldownTimer = null;
+
+try {
+    const savedCooldownUntil = Number(window.localStorage.getItem(bookingCooldownStorageKey));
+    if (Number.isFinite(savedCooldownUntil) && savedCooldownUntil > Date.now()) {
+        bookingCooldownUntil = savedCooldownUntil;
+    } else {
+        window.localStorage.removeItem(bookingCooldownStorageKey);
+    }
+} catch {
+    bookingCooldownUntil = 0;
+}
+
+function formatCooldownTime(milliseconds) {
+    const totalSeconds = Math.ceil(milliseconds / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+}
+
+function refreshBookingCooldown() {
+    const remaining = bookingCooldownUntil - Date.now();
+    if (remaining <= 0) {
+        if (bookingCooldownUntil > 0) {
+            bookingCooldownUntil = 0;
+            cooldownWasConfirmedInThisSession = false;
+            hasPassedLocalCheck = false;
+            try {
+                window.localStorage.removeItem(bookingCooldownStorageKey);
+            } catch {
+                // Local storage only supports the user-facing timer.
+            }
+
+            if (/^(Заявка успешно отправлена|Повторную заявку)/.test(formMessage.textContent)) {
+                formMessage.textContent = "Повторную заявку снова можно отправить.";
+            }
+        }
+
+        submitButton.disabled = false;
+        return false;
+    }
+
+    const message = cooldownWasConfirmedInThisSession
+        ? "Заявка успешно отправлена в Telegram. Повторную заявку можно отправить через"
+        : "Повторную заявку можно отправить через";
+    formMessage.textContent = `${message} ${formatCooldownTime(remaining)}.`;
+    submitButton.disabled = true;
+    return true;
+}
+
+function startBookingCooldownTimer() {
+    if (bookingCooldownTimer === null) {
+        bookingCooldownTimer = window.setInterval(function () {
+            if (!refreshBookingCooldown()) {
+                window.clearInterval(bookingCooldownTimer);
+                bookingCooldownTimer = null;
+            }
+        }, 1000);
+    }
+}
+
+if (bookingCooldownUntil > Date.now()) {
+    refreshBookingCooldown();
+    startBookingCooldownTimer();
+}
 
 function showBookingMessage() {
     document.getElementById("booking")?.scrollIntoView({ behavior: "smooth" });
@@ -164,36 +244,161 @@ if (headerBookingButton) {
 }
 
 if (bookingForm && formMessage) {
-    function updateBookingValidation() {
-        const nameIsOnlyWhitespace = customerName.value.length > 0 && !customerName.value.trim();
-        const vehicleIsOnlyWhitespace = vehicle.value.length > 0 && !vehicle.value.trim();
-        const phoneValue = customerPhone.value.trim();
-        const phoneDigits = phoneValue.replace(/\D/g, "");
-        const phoneHasAllowedCharacters = /^[0-9\s()+-]+$/.test(phoneValue);
-        const phoneIsValid = phoneHasAllowedCharacters && (
-            phoneDigits.length === 10 ||
-            (phoneDigits.length === 11 && /^[78]/.test(phoneDigits))
-        );
+    let phoneInputHasGeneratedPrefix = false;
 
-        customerName.setCustomValidity(nameIsOnlyWhitespace ? "Введите имя, а не только пробелы." : "");
-        vehicle.setCustomValidity(vehicleIsOnlyWhitespace ? "Укажите марку и модель автомобиля." : "");
-        customerPhone.setCustomValidity(phoneValue && !phoneIsValid ? "Введите российский номер: 10 цифр или 11 цифр с 7 или 8." : "");
+    function hasAllowedPhoneCharacters(value, allowPartialParenthesis = false) {
+        if (!/^[0-9+\s()-]+$/.test(value) || /(?:\+{2,}|-{2,}|\({2,}|\){2,}|\s{2,})/.test(value)) {
+            return false;
+        }
+
+        const compactValue = value.replace(/[\s()-]/g, "");
+        const plusCount = (compactValue.match(/\+/g) || []).length;
+        if (plusCount > 1 || (plusCount === 1 && !compactValue.startsWith("+7"))) {
+            return false;
+        }
+
+        const openingParentheses = (value.match(/\(/g) || []).length;
+        const closingParentheses = (value.match(/\)/g) || []).length;
+        if (openingParentheses > 1 || closingParentheses > 1) {
+            return false;
+        }
+
+        if (openingParentheses !== closingParentheses) {
+            return allowPartialParenthesis && openingParentheses === 1 && closingParentheses === 0;
+        }
+
+        return openingParentheses === 0 || value.indexOf("(") < value.indexOf(")");
     }
 
+    function getRussianPhoneDigits(value, hasGeneratedPrefix = false) {
+        const phoneValue = value.trim();
+        if (!phoneValue) {
+            return "";
+        }
+
+        if (!hasAllowedPhoneCharacters(phoneValue, hasGeneratedPrefix)) {
+            return null;
+        }
+
+        const compactValue = phoneValue.replace(/[\s()-]/g, "");
+        const hasInternationalPrefix = compactValue.startsWith("+");
+        let digits = hasInternationalPrefix ? compactValue.slice(2) : compactValue;
+
+        if (!/^\d+$/.test(digits)) {
+            return null;
+        }
+
+        if ((hasGeneratedPrefix || !hasInternationalPrefix) && digits.length === 11 && /^[78]/.test(digits)) {
+            digits = digits.slice(1);
+        }
+
+        if (digits.length !== 10 || !/^[3-9]/.test(digits)) {
+            return null;
+        }
+
+        return digits;
+    }
+
+    function formatRussianPhoneInput(event) {
+        const phoneValue = customerPhone.value.trim();
+        if (!phoneValue) {
+            phoneInputHasGeneratedPrefix = false;
+            return;
+        }
+
+        const isPastedValue = event.inputType === "insertFromPaste" || event.inputType === "insertReplacementText";
+        const usesGeneratedPrefix = phoneInputHasGeneratedPrefix && !isPastedValue && phoneValue.startsWith("+7");
+        if (!hasAllowedPhoneCharacters(phoneValue, usesGeneratedPrefix)) {
+            phoneInputHasGeneratedPrefix = false;
+            return;
+        }
+
+        const compactValue = phoneValue.replace(/[\s()-]/g, "");
+        const hasInternationalPrefix = compactValue.startsWith("+");
+        let digits = hasInternationalPrefix ? compactValue.slice(2) : compactValue;
+
+        if (!/^\d*$/.test(digits)) {
+            phoneInputHasGeneratedPrefix = false;
+            return;
+        }
+
+        if ((usesGeneratedPrefix || !hasInternationalPrefix) && digits.length === 11 && /^[78]/.test(digits)) {
+            digits = digits.slice(1);
+        }
+
+        if (digits.length > 10) {
+            phoneInputHasGeneratedPrefix = false;
+            return;
+        }
+
+        let formattedValue = "+7";
+        if (digits.length > 0) {
+            formattedValue += ` (${digits.slice(0, 3)}`;
+        }
+        if (digits.length >= 3) {
+            formattedValue += ")";
+        }
+        if (digits.length > 3) {
+            formattedValue += ` ${digits.slice(3, 6)}`;
+        }
+        if (digits.length > 6) {
+            formattedValue += `-${digits.slice(6, 8)}`;
+        }
+        if (digits.length > 8) {
+            formattedValue += `-${digits.slice(8, 10)}`;
+        }
+
+        customerPhone.value = formattedValue;
+        phoneInputHasGeneratedPrefix = true;
+        customerPhone.setSelectionRange(formattedValue.length, formattedValue.length);
+    }
+
+    function updateBookingValidation() {
+        const nameIsOnlyWhitespace = customerName.value.length > 0 && !customerName.value.trim();
+        const vehicleValue = vehicle.value.trim();
+        const vehicleCompactValue = vehicleValue.replace(/\s/g, "");
+        const vehicleIsInvalid = vehicle.value.length > 0 && (
+            vehicleValue.length < 3 ||
+            /^\d+$/.test(vehicleCompactValue)
+        );
+        const phoneValue = customerPhone.value.trim();
+        const phoneDigits = getRussianPhoneDigits(phoneValue, phoneInputHasGeneratedPrefix);
+        const phoneIsValid = phoneDigits !== null && phoneDigits.length === 10;
+
+        customerName.setCustomValidity(nameIsOnlyWhitespace ? "Введите имя, а не только пробелы." : "");
+        vehicle.setCustomValidity(vehicleIsInvalid ? "Укажите марку и модель автомобиля (не менее 3 символов)." : "");
+        const phoneIsOnlyWhitespace = customerPhone.value.length > 0 && !phoneValue;
+        customerPhone.setCustomValidity(phoneIsOnlyWhitespace
+            ? "Введите телефон, а не только пробелы."
+            : phoneValue && !phoneIsValid
+                ? "Введите российский номер: 10 цифр или 11 цифр с 7 или 8."
+                : "");
+    }
+
+    customerPhone.addEventListener("input", formatRussianPhoneInput);
+
     function resetLocalCheck() {
-        formMessage.textContent = "";
+        if (isProcessing) {
+            formChangedDuringRequest = true;
+            return;
+        }
+
         hasPassedLocalCheck = false;
         submitButton.disabled = false;
         updateBookingValidation();
+
+        if (!refreshBookingCooldown()) {
+            formMessage.textContent = "";
+        }
     }
 
     bookingForm.addEventListener("input", resetLocalCheck);
     bookingForm.addEventListener("change", resetLocalCheck);
 
-    bookingForm.addEventListener("submit", function (event) {
+    bookingForm.addEventListener("submit", async function (event) {
         event.preventDefault();
 
-        if (isProcessing || hasPassedLocalCheck) {
+        if (isProcessing || hasPassedLocalCheck || refreshBookingCooldown()) {
             return;
         }
 
@@ -203,11 +408,63 @@ if (bookingForm && formMessage) {
             return;
         }
 
+        const formData = new FormData(bookingForm);
+        const payload = {
+            name: String(formData.get("name") || "").trim(),
+            phone: String(formData.get("phone") || "").trim(),
+            vehicle: String(formData.get("vehicle") || "").trim(),
+            service: String(formData.get("service") || ""),
+            comment: String(formData.get("comment") || "").trim()
+        };
+
         isProcessing = true;
+        formChangedDuringRequest = false;
         submitButton.disabled = true;
-        formMessage.textContent = "Проверка пройдена. Данные не отправлены и не сохранены.";
-        hasPassedLocalCheck = true;
-        isProcessing = false;
+        formMessage.textContent = "Отправляем заявку…";
+
+        try {
+            const response = await fetch("https://avtomehanika-orders.19gc19.workers.dev/", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+
+            let result = null;
+            try {
+                result = await response.json();
+            } catch {
+                result = null;
+            }
+
+            if (response.ok && result?.ok === true) {
+                bookingCooldownUntil = Date.now() + bookingCooldownDuration;
+                cooldownWasConfirmedInThisSession = true;
+                hasPassedLocalCheck = true;
+                try {
+                    window.localStorage.setItem(bookingCooldownStorageKey, String(bookingCooldownUntil));
+                } catch {
+                    // Keep the UX cooldown in memory if browser storage is unavailable.
+                }
+                refreshBookingCooldown();
+                startBookingCooldownTimer();
+                return;
+            }
+
+            const serverMessage = typeof result?.error === "string" ? result.error.trim() : "";
+            formMessage.textContent = serverMessage || "Не удалось отправить заявку. Проверьте данные и попробуйте позже.";
+            hasPassedLocalCheck = false;
+        } catch {
+            formMessage.textContent = "Не удалось связаться с сервисом. Проверьте подключение и попробуйте ещё раз.";
+            hasPassedLocalCheck = false;
+        } finally {
+            isProcessing = false;
+            if (bookingCooldownUntil > Date.now()) {
+                refreshBookingCooldown();
+                startBookingCooldownTimer();
+            } else {
+                submitButton.disabled = hasPassedLocalCheck && !formChangedDuringRequest;
+            }
+        }
     });
 }
 

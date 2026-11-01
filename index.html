@@ -161,8 +161,8 @@
                 </div>
 
                 <div class="form-submit-row">
-                    <button class="hero-button" type="submit">Проверить заявку</button>
-                    <p class="form-note">Форма пока работает только в браузере: данные не отправляются и не сохраняются.</p>
+                    <button class="hero-button" type="submit">Отправить заявку</button>
+                    <p class="form-note">После успешной отправки заявка поступит в Telegram.</p>
                 </div>
                 <p class="form-message" id="formMessage" role="status" aria-live="polite"></p>
             </form>
@@ -181,6 +181,13 @@
                 <div class="contact-item">
                     <h3>Адрес</h3>
                     <p id="contactAddress"></p>
+                    <details class="route-picker">
+                        <summary class="route-picker-trigger">Построить маршрут</summary>
+                        <div class="route-picker-options">
+                            <a id="googleMapsRoute" href="#" target="_blank" rel="noopener noreferrer">Google Maps</a>
+                            <a id="yandexMapsRoute" href="#" target="_blank" rel="noopener noreferrer">Яндекс Карты</a>
+                        </div>
+                    </details>
                 </div>
 
                 <div class="contact-item">

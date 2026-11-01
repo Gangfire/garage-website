@@ -797,6 +797,76 @@ a {
     color: #ff9a9f;
 }
 
+.route-picker {
+    margin-top: 12px;
+}
+
+.route-picker-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 40px;
+    padding: 8px 13px;
+    border: 1px solid rgba(200, 18, 29, 0.45);
+    border-radius: 999px;
+    background: rgba(200, 18, 29, 0.1);
+    color: var(--text);
+    font-size: 0.84rem;
+    font-weight: 700;
+    cursor: pointer;
+    list-style: none;
+}
+
+.route-picker-trigger::-webkit-details-marker {
+    display: none;
+}
+
+.route-picker-trigger::after {
+    content: "+";
+    color: #ff7078;
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+.route-picker[open] .route-picker-trigger::after {
+    content: "−";
+}
+
+.route-picker-trigger:hover,
+.route-picker-trigger:focus-visible {
+    border-color: var(--accent);
+    outline: 2px solid rgba(200, 18, 29, 0.35);
+    outline-offset: 2px;
+}
+
+.route-picker-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.route-picker-options a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    padding: 7px 11px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: #101010;
+    color: var(--muted);
+    font-size: 0.8rem;
+    text-decoration: none;
+}
+
+.route-picker-options a:hover,
+.route-picker-options a:focus-visible {
+    border-color: rgba(200, 18, 29, 0.6);
+    color: var(--text);
+    outline: 2px solid rgba(200, 18, 29, 0.3);
+    outline-offset: 2px;
+}
+
 .service {
     padding: 20px;
     margin-top: 20px;
